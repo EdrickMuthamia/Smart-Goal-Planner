@@ -12,15 +12,19 @@ function DepositForm({ onDeposit }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="number"
-        placeholder="Deposit Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        required
-      />
-      <button type="submit">Deposit</button>
+    <form onSubmit={handleSubmit} className="deposit-form">
+      <div className="deposit-input-group">
+        <input
+          type="number"
+          placeholder="Amount"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          min="1"
+          step="any"
+          required
+        />
+        <button type="submit">Add Deposit</button>
+      </div>
     </form>
   );
 }

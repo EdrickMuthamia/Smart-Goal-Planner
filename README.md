@@ -35,6 +35,27 @@ Or run them separately:
 - Start JSON Server: `npm run server`
 - Start React app: `npm start`
 
+## Deployment
+
+### Frontend (GitHub Pages)
+1. Update the homepage in package.json with your GitHub username
+2. Deploy to GitHub Pages:
+   ```
+   npm run deploy
+   ```
+
+### Backend (Heroku)
+1. Create a Heroku account and install Heroku CLI
+2. Create a new Heroku app:
+   ```
+   heroku create your-app-name
+   ```
+3. Deploy to Heroku:
+   ```
+   git push heroku main
+   ```
+4. Update the API_URL in src/App.js with your Heroku app URL
+
 ## Project Structure
 
 - `src/components/` - React components

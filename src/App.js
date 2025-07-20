@@ -4,8 +4,8 @@ import GoalForm from './components/GoalForm';
 import Overview from './components/Overview';
 import './App.css';
 
-// Use environment variable or fallback to localhost
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+// Use environment variable or fallback to localhost for development
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 function App() {
   const [goals, setGoals] = useState([]);
@@ -138,15 +138,31 @@ function App() {
         </button>
       </header>
       <main>
-        <Overview goals={filteredGoals} />
-        <GoalForm onAddGoal={handleAddGoal} />
-        <GoalList 
-          goals={filteredGoals} 
-          onUpdateGoal={handleUpdateGoal} 
-          onDeleteGoal={handleDeleteGoal} 
-          onDeposit={handleDeposit} 
-        />
+        <div className="dashboard-container">
+          <div className="dashboard-left">
+            <Overview goals={filteredGoals} />
+            <GoalForm onAddGoal={handleAddGoal} />
+          </div>
+          <div className="dashboard-right">
+            <h2>Your Goals</h2>
+            {filteredGoals.length === 0 ? (
+              <div className="no-goals-message">
+                <p>No goals found. Create your first goal to get started!</p>
+              </div>
+            ) : (
+              <GoalList 
+                goals={filteredGoals} 
+                onUpdateGoal={handleUpdateGoal} 
+                onDeleteGoal={handleDeleteGoal} 
+                onDeposit={handleDeposit} 
+              />
+            )}
+          </div>
+        </div>
       </main>
+      <footer className="App-footer">
+        <p>© 2025 Smart Goal Planner - Track your financial goals with ease</p>
+      </footer>
     </div>
   );
 }
