@@ -1,1 +1,31 @@
-{}
+{
+  "goals": [
+    {
+      "id": "1",
+      "name": "Travel Fund - Japan",
+      "targetAmount": 5000,
+      "savedAmount": 3200,
+      "category": "Travel",
+      "deadline": "2025-12-31",
+      "createdAt": "2024-01-15"
+    },
+    {
+      "id": "2",
+      "name": "Emergency Fund",
+      "targetAmount": 10000,
+      "savedAmount": 7500,
+      "category": "Emergency",
+      "deadline": "2026-06-30",
+      "createdAt": "2023-05-01"
+    },
+    {
+      "id": "1ca6",
+      "name": "Go to China",
+      "targetAmount": 100000,
+      "savedAmount": 900,
+      "category": "Make new friends ",
+      "deadline": "2025-07-11",
+      "createdAt": "2025-07-20"
+    }
+  ]
+}
