@@ -1,0 +1,33 @@
+{
+  "name": "smart-goal-planner",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "server": "json-server --watch db.json --port 3000",
+    "dev": "concurrently \"npm run server\" \"npm start\"",
+    "deploy": "npm run build && npm run server"
+  },
+  "proxy": "http://localhost:3000",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "json-server": "^0.17.3",
+    "concurrently": "^8.2.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
