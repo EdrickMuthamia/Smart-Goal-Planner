@@ -24,14 +24,19 @@ function Overview({ goals }) {
 
           return (
             <li key={goal.id}>
-              {goal.name} -{" "}
+              <strong>{goal.name}</strong> -{" "}
               {isCompleted
                 ? "✅ Completed"
                 : isOverdue
                 ? "❌ Overdue"
                 : isNearDeadline
-                ? "⚠️ Near Deadline"
-                : "⏳ On Track"}
+                ? `⚠️ Near Deadline (${daysLeft} days left)`
+                : `⏳ On Track (${daysLeft} days left)`}
+              <div className="goal-overview-details">
+                <span>Progress: {((goal.savedAmount / goal.targetAmount) * 100).toFixed(1)}%</span>
+                <span>Target: KSh {goal.targetAmount.toFixed(2)}</span>
+                <span>Saved: KSh {goal.savedAmount.toFixed(2)}</span>
+              </div>
             </li>
           );
         })}

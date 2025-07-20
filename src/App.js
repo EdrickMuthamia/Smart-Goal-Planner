@@ -15,7 +15,7 @@ function App() {
 
   // Fetch goals from json-server
   useEffect(() => {
-    fetch('http://localhost:3000/goals')
+    fetch(`${API_URL}/goals`)
       .then(response => {
         if (!response.ok) throw new Error('Failed to fetch goals');
         return response.json();
@@ -32,7 +32,7 @@ function App() {
 
   // Add a new goal
   const handleAddGoal = (newGoal) => {
-    fetch('http://localhost:3000/goals', {
+    fetch(`${API_URL}/goals`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ function App() {
 
   // Update an existing goal
   const handleUpdateGoal = (updatedGoal) => {
-    fetch(`http://localhost:3000/goals/${updatedGoal.id}`, {
+    fetch(`${API_URL}/goals/${updatedGoal.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ function App() {
 
   // Delete a goal
   const handleDeleteGoal = (goalId) => {
-    fetch(`http://localhost:3000/goals/${goalId}`, {
+    fetch(`${API_URL}/goals/${goalId}`, {
       method: 'DELETE',
     })
       .then(response => {
@@ -90,7 +90,7 @@ function App() {
       savedAmount: goal.savedAmount + amount
     };
     
-    fetch(`http://localhost:3000/goals/${goalId}`, {
+    fetch(`${API_URL}/goals/${goalId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
