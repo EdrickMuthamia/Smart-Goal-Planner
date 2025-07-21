@@ -1,31 +1,49 @@
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #f8f9fa;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+  --text-color: #333;
+  --light-text: #6c757d;
+  --border-radius: 8px;
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --hover-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  --transition: 0.2s;
+}
+
 .App {
   text-align: center;
-  max-width: 1000px;
+  max-width: 90%;
+  width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 1rem;
   font-family: Arial, sans-serif;
 }
 
 .App-header {
-  margin-bottom: 30px;
-  background-color: #2c3e50;
+  margin-bottom: 2rem;
+  background-color: var(--primary-color);
   color: white;
-  padding: 20px;
-  border-radius: 8px;
+  padding: 1.25rem;
+  border-radius: var(--border-radius);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .filter-button {
   background-color: white;
-  color: #2c3e50;
+  color: var(--primary-color);
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  border-radius: calc(var(--border-radius) / 2);
   cursor: pointer;
   font-weight: bold;
-  transition: background-color 0.2s;
+  transition: all var(--transition);
 }
 
 .filter-button:hover {
@@ -44,16 +62,19 @@ main {
 
 .dashboard-container {
   display: flex;
-  gap: 30px;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
 .dashboard-left {
   flex: 1;
-  max-width: 400px;
+  min-width: 300px;
+  max-width: 100%;
 }
 
 .dashboard-right {
   flex: 2;
+  min-width: 300px;
 }
 
 .dashboard-right h2 {
@@ -81,13 +102,33 @@ main {
   font-size: 14px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .dashboard-container {
     flex-direction: column;
   }
   
   .dashboard-left {
     max-width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .App {
+    max-width: 100%;
+    padding: 0.5rem;
+  }
+  
+  .App-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .filter-button {
+    width: 100%;
+  }
+  
+  .goal-list {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -194,8 +235,8 @@ form input:focus, form select:focus {
 
 .goal-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
 }
 
 .goal-item {
@@ -242,19 +283,19 @@ form input:focus, form select:focus {
 
 /* Status-specific styling */
 .completed {
-  border-left: 5px solid #28a745;
+  border-left: 5px solid var(--success-color);
 }
 
 .overdue {
-  border-left: 5px solid #dc3545;
+  border-left: 5px solid var(--danger-color);
 }
 
 .near-deadline {
-  border-left: 5px solid #ffc107;
+  border-left: 5px solid var(--warning-color);
 }
 
 .on-track {
-  border-left: 5px solid #17a2b8;
+  border-left: 5px solid var(--info-color);
 }
 
 /* Deposit form styling */
@@ -276,9 +317,10 @@ form input:focus, form select:focus {
 }
 
 .deposit-input-group button {
-  background-color: #28a745;
+  background-color: var(--success-color);
 }
 
 .deposit-input-group button:hover {
   background-color: #218838;
+  transform: translateY(-2px);
 }
