@@ -1,131 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import GoalList from './components/GoalList';
 import GoalForm from './components/GoalForm';
 import Overview from './components/Overview';
 import { mockGoals } from './mockData';
 import './App.css';
 
-// Use environment variable or fallback to mock data approach
-// For Vercel deployment, set REACT_APP_API_URL in the Vercel dashboard
-const API_URL = process.env.REACT_APP_API_URL || 
-  (window.location.hostname === 'localhost' ? 'http://localhost:3001' : '');
+// For Vercel deployment, we'll use mock data directly
+const API_URL = '';
 
 function App() {
-  const [goals, setGoals] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // Initialize with mock data directly
+  const [goals, setGoals] = useState(mockGoals);
   const [showFarGoals, setShowFarGoals] = useState(false);
 
-  // Fetch goals from json-server
-  useEffect(() => {
-    const fetchGoals = async () => {
-      try {
-        const response = await fetch(`${API_URL}/goals`);
-        if (!response.ok) throw new Error('Failed to fetch goals');
-        const data = await response.json();
-        setGoals(data);
-        setIsLoading(false);
-      } catch (err) {
-        console.warn('Using mock data due to API error:', err.message);
-        // Use mock data as fallback
-        setGoals(mockGoals);
-        setIsLoading(false);
-        setError(null); // Clear error since we're using mock data
-      }
-    };
-    
-    fetchGoals();
-  }, []);
-
-  // Add a new goal
+  // Add a new goal (local state only)
   const handleAddGoal = (newGoal) => {
-    // If no API_URL, work with local state only
-    if (!API_URL) {
-      const newGoalWithId = {
-        ...newGoal,
-        id: Date.now().toString(),
-      };
-      setGoals([...goals, newGoalWithId]);
-      return;
-    }
-    
-    fetch(`${API_URL}/goals`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newGoal),
-    })
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to add goal');
-        return response.json();
-      })
-      .then(data => {
-        setGoals([...goals, data]);
-      })
-      .catch(err => {
-        // Fall back to local state
-        const newGoalWithId = {
-          ...newGoal,
-          id: Date.now().toString(),
-        };
-        setGoals([...goals, newGoalWithId]);
-        console.warn('Using local state due to API error:', err.message);
-      });
+    const newGoalWithId = {
+      ...newGoal,
+      id: Date.now().toString(),
+    };
+    setGoals([...goals, newGoalWithId]);
   };
 
-  // Update an existing goal
+  // Update an existing goal (local state only)
   const handleUpdateGoal = (updatedGoal) => {
-    // If no API_URL, work with local state only
-    if (!API_URL) {
-      setGoals(goals.map(goal => goal.id === updatedGoal.id ? updatedGoal : goal));
-      return;
-    }
-    
-    fetch(`${API_URL}/goals/${updatedGoal.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedGoal),
-    })
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to update goal');
-        return response.json();
-      })
-      .then(data => {
-        setGoals(goals.map(goal => goal.id === data.id ? data : goal));
-      })
-      .catch(err => {
-        // Fall back to local state
-        setGoals(goals.map(goal => goal.id === updatedGoal.id ? updatedGoal : goal));
-        console.warn('Using local state due to API error:', err.message);
-      });
+    setGoals(goals.map(goal => goal.id === updatedGoal.id ? updatedGoal : goal));
   };
 
-  // Delete a goal
+  // Delete a goal (local state only)
   const handleDeleteGoal = (goalId) => {
-    // If no API_URL, work with local state only
-    if (!API_URL) {
-      setGoals(goals.filter(goal => goal.id !== goalId));
-      return;
-    }
-    
-    fetch(`${API_URL}/goals/${goalId}`, {
-      method: 'DELETE',
-    })
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to delete goal');
-        setGoals(goals.filter(goal => goal.id !== goalId));
-      })
-      .catch(err => {
-        // Fall back to local state
-        setGoals(goals.filter(goal => goal.id !== goalId));
-        console.warn('Using local state due to API error:', err.message);
-      });
+    setGoals(goals.filter(goal => goal.id !== goalId));
   };
 
-  // Make a deposit to a goal
+  // Make a deposit to a goal (local state only)
   const handleDeposit = (goalId, amount) => {
     const goal = goals.find(g => g.id === goalId);
     if (!goal) return;
@@ -135,31 +42,7 @@ function App() {
       savedAmount: goal.savedAmount + amount
     };
     
-    // If no API_URL, work with local state only
-    if (!API_URL) {
-      setGoals(goals.map(g => g.id === goalId ? updatedGoal : g));
-      return;
-    }
-    
-    fetch(`${API_URL}/goals/${goalId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ savedAmount: updatedGoal.savedAmount }),
-    })
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to make deposit');
-        return response.json();
-      })
-      .then(data => {
-        setGoals(goals.map(g => g.id === goalId ? { ...g, savedAmount: data.savedAmount } : g));
-      })
-      .catch(err => {
-        // Fall back to local state
-        setGoals(goals.map(g => g.id === goalId ? updatedGoal : g));
-        console.warn('Using local state due to API error:', err.message);
-      });
+    setGoals(goals.map(g => g.id === goalId ? updatedGoal : g));
   };
 
   // Filter goals that are 24 days or more from deadline
@@ -180,9 +63,6 @@ function App() {
   };
 
   const filteredGoals = getFilteredGoals();
-
-  if (isLoading) return <div>Loading goals...</div>;
-  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="App">
