@@ -1,7 +1,7 @@
 {
   "name": "smart-goal-planner",
   "version": "1.0.0",
-  "homepage": "https://edrick.github.io/Smart-Goal-Planner",
+
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
