@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import GoalList from './components/GoalList';
 import GoalForm from './components/GoalForm';
 import Overview from './components/Overview';
+import { mockGoals } from './mockData';
 import './App.css';
 
-// Use environment variable or fallback to localhost for development
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+// Use environment variable or fallback to mock data approach
+// For Vercel deployment, set REACT_APP_API_URL in the Vercel dashboard
+const API_URL = process.env.REACT_APP_API_URL || 
+  (window.location.hostname === 'localhost' ? 'http://localhost:3001' : '');
 
 function App() {
   const [goals, setGoals] = useState([]);
@@ -15,23 +18,37 @@ function App() {
 
   // Fetch goals from json-server
   useEffect(() => {
-    fetch(`${API_URL}/goals`)
-      .then(response => {
+    const fetchGoals = async () => {
+      try {
+        const response = await fetch(`${API_URL}/goals`);
         if (!response.ok) throw new Error('Failed to fetch goals');
-        return response.json();
-      })
-      .then(data => {
+        const data = await response.json();
         setGoals(data);
         setIsLoading(false);
-      })
-      .catch(err => {
-        setError(err.message);
+      } catch (err) {
+        console.warn('Using mock data due to API error:', err.message);
+        // Use mock data as fallback
+        setGoals(mockGoals);
         setIsLoading(false);
-      });
+        setError(null); // Clear error since we're using mock data
+      }
+    };
+    
+    fetchGoals();
   }, []);
 
   // Add a new goal
   const handleAddGoal = (newGoal) => {
+    // If no API_URL, work with local state only
+    if (!API_URL) {
+      const newGoalWithId = {
+        ...newGoal,
+        id: Date.now().toString(),
+      };
+      setGoals([...goals, newGoalWithId]);
+      return;
+    }
+    
     fetch(`${API_URL}/goals`, {
       method: 'POST',
       headers: {
@@ -46,11 +63,25 @@ function App() {
       .then(data => {
         setGoals([...goals, data]);
       })
-      .catch(err => setError(err.message));
+      .catch(err => {
+        // Fall back to local state
+        const newGoalWithId = {
+          ...newGoal,
+          id: Date.now().toString(),
+        };
+        setGoals([...goals, newGoalWithId]);
+        console.warn('Using local state due to API error:', err.message);
+      });
   };
 
   // Update an existing goal
   const handleUpdateGoal = (updatedGoal) => {
+    // If no API_URL, work with local state only
+    if (!API_URL) {
+      setGoals(goals.map(goal => goal.id === updatedGoal.id ? updatedGoal : goal));
+      return;
+    }
+    
     fetch(`${API_URL}/goals/${updatedGoal.id}`, {
       method: 'PATCH',
       headers: {
@@ -65,11 +96,21 @@ function App() {
       .then(data => {
         setGoals(goals.map(goal => goal.id === data.id ? data : goal));
       })
-      .catch(err => setError(err.message));
+      .catch(err => {
+        // Fall back to local state
+        setGoals(goals.map(goal => goal.id === updatedGoal.id ? updatedGoal : goal));
+        console.warn('Using local state due to API error:', err.message);
+      });
   };
 
   // Delete a goal
   const handleDeleteGoal = (goalId) => {
+    // If no API_URL, work with local state only
+    if (!API_URL) {
+      setGoals(goals.filter(goal => goal.id !== goalId));
+      return;
+    }
+    
     fetch(`${API_URL}/goals/${goalId}`, {
       method: 'DELETE',
     })
@@ -77,7 +118,11 @@ function App() {
         if (!response.ok) throw new Error('Failed to delete goal');
         setGoals(goals.filter(goal => goal.id !== goalId));
       })
-      .catch(err => setError(err.message));
+      .catch(err => {
+        // Fall back to local state
+        setGoals(goals.filter(goal => goal.id !== goalId));
+        console.warn('Using local state due to API error:', err.message);
+      });
   };
 
   // Make a deposit to a goal
@@ -89,6 +134,12 @@ function App() {
       ...goal,
       savedAmount: goal.savedAmount + amount
     };
+    
+    // If no API_URL, work with local state only
+    if (!API_URL) {
+      setGoals(goals.map(g => g.id === goalId ? updatedGoal : g));
+      return;
+    }
     
     fetch(`${API_URL}/goals/${goalId}`, {
       method: 'PATCH',
@@ -104,7 +155,11 @@ function App() {
       .then(data => {
         setGoals(goals.map(g => g.id === goalId ? { ...g, savedAmount: data.savedAmount } : g));
       })
-      .catch(err => setError(err.message));
+      .catch(err => {
+        // Fall back to local state
+        setGoals(goals.map(g => g.id === goalId ? updatedGoal : g));
+        console.warn('Using local state due to API error:', err.message);
+      });
   };
 
   // Filter goals that are 24 days or more from deadline
